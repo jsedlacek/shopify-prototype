@@ -5,8 +5,11 @@
   "license": "MIT",
   "dependencies": {
     "@shopify/polaris": "^1.13.1",
+    "@types/d3": "^5.0.0",
     "@types/react": "^16.3.5",
     "@types/react-dom": "^16.0.4",
+    "css-element-queries": "^1.0.2",
+    "d3": "^5.0.0",
     "parcel-bundler": "^1.7.0",
     "react": "^16.3.1",
     "react-dom": "^16.3.1"
@@ -16,6 +19,7 @@
     "build": "parcel build index.html"
   },
   "devDependencies": {
+    "node-sass": "^4.8.3",
     "typescript": "^2.8.1"
   }
 }

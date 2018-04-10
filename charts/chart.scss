@@ -1,0 +1,67 @@
+$main-color: rgb(255, 73, 129);
+$main-color-light: rgba($main-color, 0.05);
+$danger-color: rgb(255, 45, 85);
+$danger-color-light: rgba($danger-color, 0.05);
+$green-color: #7bc657;
+$orange-color: #fbb56d;
+$red-color: #f76b57;
+$success-color: #66bd61;
+$link-color-base: $main-color;
+$color-base: rgb(75, 75, 75);
+$promoter-color: $green-color;
+$passive-color: $orange-color;
+$detractor-color: $red-color;
+$chart-blue-color: #5dd0fb;
+$chart-violet-color: #737ec7;
+
+.chart {
+  fill: #333;
+}
+.chart .bar.promoter {
+  fill: $promoter-color;
+}
+.chart .bar.passive {
+  fill: $passive-color;
+}
+.chart .bar.detractor {
+  fill: $detractor-color;
+}
+
+.chart .area {
+  fill: mix($chart-violet-color, white, 10%);
+}
+.chart .line {
+  fill: none;
+  stroke: $chart-violet-color;
+  stroke-width: 1px;
+}
+.chart.nps .line {
+  stroke: $chart-blue-color;
+}
+
+.axis text {
+  fill: #333;
+  font-size: 10px;
+}
+
+.axis path,
+.axis line {
+  fill: none;
+  shape-rendering: crispEdges;
+}
+
+.chart .axis .tick line {
+  stroke: #ebebeb;
+}
+
+.chart .axis .domain {
+  stroke: none;
+}
+
+.chart.nps circle.selected {
+  fill: $chart-blue-color;
+}
+
+.chart.responses circle.selected {
+  fill: $chart-violet-color;
+}
