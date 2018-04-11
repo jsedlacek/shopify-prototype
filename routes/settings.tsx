@@ -19,7 +19,7 @@ import ReactDOM from 'react-dom';
 import TimeChart from '../charts/time-chart';
 import RatingFrequency from '../charts/rating-frequency';
 import Preview from '../components/preview';
-import WidthMonitor from '../width-monitor';
+import WidthMonitor from '../components/width-monitor';
 
 class PreviewCard extends React.Component {
   render() {
