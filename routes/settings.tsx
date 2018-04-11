@@ -56,7 +56,7 @@ export default function Settings() {
           <TextField label="Email subject" value="Your opinion matters" />
 
           <TextField
-            label="Introd message"
+            label="Intro message"
             multiline={true}
             value={`Hey there,
 
