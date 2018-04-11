@@ -1,22 +1,22 @@
 import {
+  Button,
   Card,
-  ChoiceList,
+  Collapsible,
+  DisplayText,
   FormLayout,
-  Layout,
   Page,
   PageActions,
   Select,
-  TextField,
-  Collapsible,
-  Button,
   Stack,
-  DisplayText
+  TextField
 } from '@shopify/polaris';
 import '@shopify/polaris/styles.css';
+import moment from 'moment';
 import React from 'react';
 import ReactDOM from 'react-dom';
-import Preview from './preview';
+import TimeChart from './charts/time-chart';
 import RatingFrequency from './charts/rating-frequency';
+import Preview from './preview';
 import WidthMonitor from './width-monitor';
 
 class PreviewCard extends React.Component {
@@ -89,7 +89,68 @@ function Dashboard() {
   );
 }
 
-function Report() {
+function NpsTrend() {
+  return (
+    <WidthMonitor
+      render={width => (
+        <TimeChart
+          size={{ width: width, height: 150 }}
+          area={false}
+          domain={[-100, 100]}
+          items={[
+            {
+              date: moment()
+                .subtract(1, 'day')
+                .startOf('day')
+                .toDate(),
+              value: -10,
+              label: new Date().toDateString()
+            },
+            {
+              date: moment()
+                .startOf('day')
+                .toDate(),
+              value: 20,
+              label: new Date().toDateString()
+            }
+          ]}
+        />
+      )}
+    />
+  );
+}
+
+function ResponseTrend() {
+  return (
+    <WidthMonitor
+      render={width => (
+        <TimeChart
+          area={true}
+          size={{ width: width, height: 150 }}
+          items={[
+            {
+              date: moment()
+                .subtract(1, 'day')
+                .startOf('day')
+                .toDate(),
+              value: 10,
+              label: new Date().toDateString()
+            },
+            {
+              date: moment()
+                .startOf('day')
+                .toDate(),
+              value: 20,
+              label: new Date().toDateString()
+            }
+          ]}
+        />
+      )}
+    />
+  );
+}
+
+function RatingFrequencyReport() {
   const ratingCounts = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
 
   return (
@@ -106,15 +167,17 @@ function Report() {
 
 function App() {
   return (
-    <Page
-      title="SatisMeter for Shopify"
-      secondaryActions={[{ content: 'Edit Settings' }]}
-    >
-      <Card title="Rating frequncy">
-        <Report />
+    <Page title="Dashboard" primaryAction={{ content: 'Settings' }}>
+      <Card title="NPS Trend">
+        <NpsTrend />
       </Card>
+
+      <Card title="Response Trend">
+        <ResponseTrend />
+      </Card>
+
       <Card title="Rating frequncy">
-        <Report />
+        <RatingFrequencyReport />
       </Card>
     </Page>
   );

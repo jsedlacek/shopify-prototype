@@ -8,22 +8,20 @@ interface Size {
   height: number;
 }
 
-interface BarModel {
+interface ChartItem {
   key: string;
   label: string;
   value: number;
   color: string;
 }
 
-type BarChartModel = BarModel[];
-
 interface Props {
   size: Size;
-  model: BarChartModel;
+  items: ChartItem[];
 }
 
 interface State {
-  selectedBar?: BarModel;
+  selectedBar?: ChartItem;
 }
 
 class BarChart extends React.Component<Props, State> {
@@ -31,12 +29,12 @@ class BarChart extends React.Component<Props, State> {
     selectedBar: undefined
   };
 
-  selectBar(bar: BarModel | undefined) {
+  selectBar(bar: ChartItem | undefined) {
     this.setState({ selectedBar: bar });
   }
 
   render() {
-    const { size, model } = this.props;
+    const { size, items } = this.props;
 
     const padding = {
       top: 10,
@@ -54,10 +52,10 @@ class BarChart extends React.Component<Props, State> {
       .scaleBand()
       .padding(0.3)
       .paddingOuter(0)
-      .domain(model.map((bar, index) => bar.label))
+      .domain(items.map((bar, index) => bar.label))
       .range([0, innerSize.width]);
 
-    const breakpoints = model.map((bar, index) => xScale(bar.key)!);
+    const breakpoints = items.map((bar, index) => xScale(bar.key)!);
 
     const xAxis = d3
       .axisBottom(xScale)
@@ -66,7 +64,7 @@ class BarChart extends React.Component<Props, State> {
 
     const yScale = d3
       .scaleLinear()
-      .domain([0, d3.max(model.map(bar => bar.value))!])
+      .domain([0, d3.max(items.map(bar => bar.value))!])
       .range([innerSize.height, 0]);
 
     const yAxis = d3
@@ -75,7 +73,7 @@ class BarChart extends React.Component<Props, State> {
       .tickSize(innerSize.width)
       .tickPadding(6);
 
-    const bars = model.map(bar => (
+    const bars = items.map(bar => (
       <rect
         key={bar.value}
         y={yScale(bar.value)}
@@ -98,7 +96,7 @@ class BarChart extends React.Component<Props, State> {
           const bounds = e.currentTarget.getBoundingClientRect();
           const x = e.clientX - bounds.left - padding.left;
           const index = Math.max(d3.bisect(breakpoints, x) - 1, 0);
-          this.selectBar(this.props.model[index]);
+          this.selectBar(this.props.items[index]);
         }}
         onMouseLeave={() => {
           this.selectBar(undefined);

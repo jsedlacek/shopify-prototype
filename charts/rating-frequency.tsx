@@ -36,5 +36,5 @@ export default function RatingFrequency({
     color: colors[group(rating)]
   }));
 
-  return <BarChart size={size} model={model} />;
+  return <BarChart size={size} items={model} />;
 }

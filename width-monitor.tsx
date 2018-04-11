@@ -33,7 +33,6 @@ export default class WidthMonitor extends React.Component<Props, State> {
 
   updateWidth() {
     if (this.element) {
-      console.log('update width', this.element.getBoundingClientRect().width);
       this.setState({
         width: this.element.getBoundingClientRect().width
       });
@@ -41,7 +40,7 @@ export default class WidthMonitor extends React.Component<Props, State> {
   }
 
   renderChildren() {
-    if (this.state.width) {
+    if (this.state.width !== undefined) {
       return this.props.render(this.state.width);
     }
   }

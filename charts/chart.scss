@@ -40,7 +40,7 @@ $chart-violet-color: #737ec7;
 }
 
 .axis text {
-  fill: #333;
+  fill: #666;
   font-size: 10px;
 }
 
@@ -58,10 +58,10 @@ $chart-violet-color: #737ec7;
   stroke: none;
 }
 
-.chart.nps circle.selected {
-  fill: $chart-blue-color;
+.chart circle.selected {
+  fill: $chart-violet-color;
 }
 
-.chart.responses circle.selected {
-  fill: $chart-violet-color;
+.chart.nps circle.selected {
+  fill: $chart-blue-color;
 }
