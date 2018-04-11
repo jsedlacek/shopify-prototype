@@ -1,25 +1,14 @@
 import {
-  Button,
   Card,
-  Collapsible,
-  DisplayText,
   FormLayout,
   Page,
   PageActions,
   Select,
-  Stack,
-  TextField,
-  Banner,
-  Layout
+  TextField
 } from '@shopify/polaris';
 import '@shopify/polaris/styles.css';
-import moment from 'moment';
 import React from 'react';
-import ReactDOM from 'react-dom';
-import TimeChart from '../charts/time-chart';
-import RatingFrequency from '../charts/rating-frequency';
 import Preview from '../components/preview';
-import WidthMonitor from '../components/width-monitor';
 
 class PreviewCard extends React.Component {
   render() {

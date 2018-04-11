@@ -1,15 +1,12 @@
+import { Axis } from 'd3-axis';
+import { select } from 'd3-selection';
 import React from 'react';
-import * as d3Axis from 'd3-axis';
-import * as d3Scale from 'd3-scale';
-import { select as d3Select } from 'd3-selection';
-
-type Orientation = 'top' | 'left' | 'bottom' | 'right';
 
 interface Props {
-  axis: d3Axis.Axis<any>;
+  axis: Axis<any>;
 }
 
-export default class Axis extends React.Component<Props> {
+export default class AxisComponent extends React.Component<Props> {
   element: SVGGElement | null = null;
 
   componentDidMount() {
@@ -22,7 +19,7 @@ export default class Axis extends React.Component<Props> {
 
   renderAxis() {
     if (this.element) {
-      d3Select(this.element).call(this.props.axis);
+      select(this.element).call(this.props.axis);
     }
   }
 

@@ -1,24 +1,22 @@
-import {
-  Button,
-  Card,
-  Collapsible,
-  DisplayText,
-  FormLayout,
-  Page,
-  PageActions,
-  Select,
-  Stack,
-  TextField,
-  Banner,
-  Layout
-} from '@shopify/polaris';
+import { Banner, Card, Layout, Page } from '@shopify/polaris';
 import '@shopify/polaris/styles.css';
+import { isNumber } from 'lodash';
 import moment from 'moment';
 import React from 'react';
-import ReactDOM from 'react-dom';
-import TimeChart from '../charts/time-chart';
 import RatingFrequency from '../charts/rating-frequency';
+import TimeChart from '../charts/time-chart';
 import WidthMonitor from '../components/width-monitor';
+
+function formatScore(score: number) {
+  if (!isNumber(score)) {
+    return '';
+  }
+  score = Math.round(score);
+  if (score > 0) {
+    return '+' + score;
+  }
+  return '' + score;
+}
 
 function NpsTrend() {
   return (
@@ -28,6 +26,7 @@ function NpsTrend() {
           size={{ width: width, height: 150 }}
           area={false}
           domain={[-100, 100]}
+          valueFormat={formatScore}
           items={[
             {
               date: moment()

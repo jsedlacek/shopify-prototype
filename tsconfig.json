@@ -2,7 +2,8 @@
   "compilerOptions": {
     "strict": true,
     "jsx": "react",
+    "lib": ["es2016", "dom"],
     "esModuleInterop": true,
-    "lib": ["es2016", "dom"]
+    "noUnusedLocals": true
   }
 }

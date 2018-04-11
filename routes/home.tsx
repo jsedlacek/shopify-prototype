@@ -1,22 +1,6 @@
-import {
-  Button,
-  Card,
-  Collapsible,
-  DisplayText,
-  FormLayout,
-  Page,
-  PageActions,
-  Select,
-  Stack,
-  TextField,
-  Banner,
-  Layout,
-  EmptyState
-} from '@shopify/polaris';
+import { EmptyState, Page } from '@shopify/polaris';
 import '@shopify/polaris/styles.css';
-import moment from 'moment';
 import React from 'react';
-import ReactDOM from 'react-dom';
 
 export default function Home() {
   return (

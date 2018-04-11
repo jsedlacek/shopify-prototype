@@ -1,8 +1,16 @@
-import React, { MouseEvent } from 'react';
+import React from 'react';
 import './chart';
 import Axis from './axis';
-import * as d3 from 'd3';
-import { isNumber, minBy } from 'lodash';
+import {
+  extent,
+  scaleTime,
+  axisBottom,
+  scaleLinear,
+  axisLeft,
+  line,
+  area
+} from 'd3';
+import { minBy } from 'lodash';
 import moment from 'moment';
 
 interface Size {
@@ -21,21 +29,11 @@ interface Props {
   items: ChartItem[];
   area: boolean;
   domain?: [number, number];
+  valueFormat?: (value: number) => string;
 }
 
 interface State {
   selectedItem?: ChartItem;
-}
-
-function formatScore(score: number) {
-  if (!isNumber(score)) {
-    return '';
-  }
-  score = Math.round(score);
-  if (score > 0) {
-    return '+' + score;
-  }
-  return '' + score;
 }
 
 class TimeChart extends React.Component<Props, State> {
@@ -63,46 +61,42 @@ class TimeChart extends React.Component<Props, State> {
     };
 
     const dates = items.map(item => item.date);
-    const [minDate, maxDate] = d3.extent(dates);
+    const [minDate, maxDate] = extent(dates);
 
     if (!minDate || !maxDate) {
       throw new Error('Missing values');
     }
 
-    const values = items.map(item => item.value);
-
     const [minValue, maxValue] =
-      this.props.domain || d3.extent(items.map(item => item.value));
+      this.props.domain || extent(items.map(item => item.value));
 
-    const xScale = d3
-      .scaleTime()
+    const xScale = scaleTime()
       .domain([minDate, maxDate])
       .range([0, innerSize.width]);
 
-    const xAxis = d3
-      .axisBottom(xScale)
+    const xAxis = axisBottom(xScale)
       .tickSize(0)
       .tickPadding(10)
       .ticks(Math.floor(innerSize.width / 80));
 
-    const yScale = d3
-      .scaleLinear()
+    const yScale = scaleLinear()
       .domain([minValue || 0, maxValue || 0])
       .range([innerSize.height, 0]);
 
-    const yAxis = d3
-      .axisLeft<number>(yScale)
+    const yAxis = axisLeft<number>(yScale)
       .tickSize(innerSize.width)
       .tickPadding(6)
       .ticks(2);
 
-    const line = d3
-      .line<ChartItem>()
+    if (this.props.valueFormat) {
+      yAxis.tickFormat(this.props.valueFormat);
+    }
+
+    const lineFn = line<ChartItem>()
       .x(d => xScale(d.date))
       .y(d => yScale(d.value));
 
-    const area = d3
-      .area<ChartItem>()
+    const areaFn = area<ChartItem>()
       .x(d => xScale(d.date))
       .y0(innerSize.height)
       .y1(d => yScale(d.value));
@@ -149,10 +143,10 @@ class TimeChart extends React.Component<Props, State> {
             <Axis axis={yAxis} />
           </g>
 
-          <path className="line" d={line(items) || undefined} />
+          <path className="line" d={lineFn(items) || undefined} />
 
           {this.props.area ? (
-            <path className="area" d={area(items) || undefined} />
+            <path className="area" d={areaFn(items) || undefined} />
           ) : null}
 
           {circle}

@@ -1,7 +1,7 @@
-import React, { MouseEvent } from 'react';
-import './chart';
+import { axisBottom, axisLeft, bisect, max, scaleBand, scaleLinear } from 'd3';
+import React from 'react';
 import Axis from './axis';
-import * as d3 from 'd3';
+import './chart.scss';
 
 interface Size {
   width: number;
@@ -48,8 +48,7 @@ class BarChart extends React.Component<Props, State> {
       height: size.height - padding.top - padding.bottom
     };
 
-    const xScale = d3
-      .scaleBand()
+    const xScale = scaleBand()
       .padding(0.3)
       .paddingOuter(0)
       .domain(items.map((bar, index) => bar.label))
@@ -57,18 +56,15 @@ class BarChart extends React.Component<Props, State> {
 
     const breakpoints = items.map((bar, index) => xScale(bar.key)!);
 
-    const xAxis = d3
-      .axisBottom(xScale)
+    const xAxis = axisBottom(xScale)
       .tickSize(0)
       .tickPadding(10);
 
-    const yScale = d3
-      .scaleLinear()
-      .domain([0, d3.max(items.map(bar => bar.value))!])
+    const yScale = scaleLinear()
+      .domain([0, max(items.map(bar => bar.value))!])
       .range([innerSize.height, 0]);
 
-    const yAxis = d3
-      .axisLeft(yScale)
+    const yAxis = axisLeft(yScale)
       .ticks(3)
       .tickSize(innerSize.width)
       .tickPadding(6);
@@ -95,7 +91,7 @@ class BarChart extends React.Component<Props, State> {
         onMouseMove={e => {
           const bounds = e.currentTarget.getBoundingClientRect();
           const x = e.clientX - bounds.left - padding.left;
-          const index = Math.max(d3.bisect(breakpoints, x) - 1, 0);
+          const index = Math.max(bisect(breakpoints, x) - 1, 0);
           this.selectBar(this.props.items[index]);
         }}
         onMouseLeave={() => {

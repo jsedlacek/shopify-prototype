@@ -21,7 +21,7 @@
   },
   "scripts": {
     "start": "parcel index.html",
-    "build": "parcel build index.html && cp _redirects dist"
+    "build": "parcel build index.html --detailed-report && cp _redirects dist"
   },
   "devDependencies": {
     "node-sass": "^4.8.3",
