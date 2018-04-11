@@ -99,7 +99,11 @@ function RatingFrequencyReport() {
 
 export default function Demo() {
   return (
-    <Page title="Dashboard" primaryAction={{ content: 'Settings' }}>
+    <Page
+      title="Dashboard"
+      primaryAction={{ content: 'Settings' }}
+      breadcrumbs={[{ content: 'SatisMeter', url: '/' }]}
+    >
       <Layout>
         <Layout.Section>
           <Banner
