@@ -18,8 +18,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import TimeChart from '../charts/time-chart';
 import RatingFrequency from '../charts/rating-frequency';
-import Preview from '../preview';
-import WidthMonitor from '../width-monitor';
+import WidthMonitor from '../components/width-monitor';
 
 function NpsTrend() {
   return (
@@ -100,7 +99,7 @@ function RatingFrequencyReport() {
 export default function Demo() {
   return (
     <Page
-      title="Dashboard"
+      title="Demo Dashboard"
       primaryAction={{ content: 'Settings' }}
       breadcrumbs={[{ content: 'SatisMeter', url: '/' }]}
     >
