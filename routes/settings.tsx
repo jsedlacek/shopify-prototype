@@ -46,6 +46,11 @@ export default function Settings() {
             label="Primary color"
             options={[{ label: 'Green', value: 'green' }]}
           />
+
+          <Select
+            label="Language"
+            options={[{ label: 'English', value: 'en' }]}
+          />
         </FormLayout>
       </Card>
 

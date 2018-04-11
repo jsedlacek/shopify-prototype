@@ -100,7 +100,7 @@ export default function Demo() {
   return (
     <Page
       title="Demo Dashboard"
-      primaryAction={{ content: 'Settings' }}
+      primaryAction={{ content: 'Settings', url: '/settings' }}
       breadcrumbs={[{ content: 'SatisMeter', url: '/' }]}
     >
       <Layout>
