@@ -9,7 +9,7 @@ interface Size {
   height: number;
 }
 
-interface BaseChartItem {
+export interface BaseChartItem {
   label: string;
   value: number;
   color?: string;
@@ -79,7 +79,7 @@ class Chart<ChartItem extends BaseChartItem> extends React.Component<
 
     return (
       <>
-        <TimeLegend
+        <ChartLegend
           item={selectedItem}
           renderValue={this.props.renderValue}
           renderLabel={this.props.renderLabel}
@@ -119,23 +119,3 @@ class Chart<ChartItem extends BaseChartItem> extends React.Component<
 }
 
 export default Chart;
-
-function TimeLegend<ChartItem extends BaseChartItem>(props: {
-  item?: ChartItem;
-  renderValue?: (item: number) => React.ReactNode;
-  renderLabel?: (label: string) => React.ReactNode;
-}) {
-  if (!props.item) {
-    return <ChartLegend visible={false} label="&nbsp;" value="&nbsp;" />;
-  }
-  const renderValue = props.renderValue || (value => <b>{value}</b>);
-  const renderLabel = props.renderLabel || (label => label);
-  return (
-    <ChartLegend
-      visible={true}
-      label={renderLabel(props.item.label)}
-      value={renderValue(props.item.value)}
-      color={props.item.color}
-    />
-  );
-}
