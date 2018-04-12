@@ -1,5 +1,5 @@
 import React from 'react';
-import BarChart from './bar-chart';
+import BarChart from '../charts/bar-chart';
 
 interface Size {
   width: number;
@@ -36,5 +36,16 @@ export default function RatingFrequency({
     color: colors[group(rating)]
   }));
 
-  return <BarChart size={size} items={model} />;
+  return (
+    <BarChart
+      size={size}
+      items={model}
+      renderValue={value => (
+        <>
+          <b>{value}</b> response(s)
+        </>
+      )}
+      renderLabel={label => `Rating ${label}`}
+    />
+  );
 }

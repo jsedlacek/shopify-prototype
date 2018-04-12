@@ -1,8 +1,7 @@
 import { axisBottom, axisLeft, bisect, max, scaleBand, scaleLinear } from 'd3';
 import React from 'react';
 import Axis from './axis';
-import ChartLegend from './chart-legend';
-import './chart.scss';
+import Chart from './chart';
 
 interface Size {
   width: number;
@@ -19,124 +18,82 @@ interface ChartItem {
 interface Props {
   size: Size;
   items: ChartItem[];
+  formatValue?: (value: number) => string;
+  renderValue?: (value: number) => React.ReactNode;
+  renderLabel?: (label: string) => React.ReactNode;
 }
 
-interface State {
-  selectedItem?: ChartItem;
-}
+interface State {}
 
 class BarChart extends React.Component<Props, State> {
-  state: State = {
-    selectedItem: undefined
-  };
-
-  selectBar(bar: ChartItem | undefined) {
-    this.setState({ selectedItem: bar });
-  }
-
   render() {
     const { size, items } = this.props;
-
-    const padding = {
-      top: 10,
-      right: 30,
-      bottom: 23,
-      left: 40
-    };
-
-    const innerSize = {
-      width: size.width - padding.left - padding.right,
-      height: size.height - padding.top - padding.bottom
-    };
 
     const xScale = scaleBand()
       .padding(0.3)
       .paddingOuter(0)
-      .domain(items.map((bar, index) => bar.label))
-      .range([0, innerSize.width]);
+      .domain(items.map((bar, index) => bar.label));
 
-    const breakpoints = items.map((bar, index) => xScale(bar.key)!);
-
-    const xAxis = axisBottom(xScale)
-      .tickSize(0)
-      .tickPadding(10);
-
-    const yScale = scaleLinear()
-      .domain([0, max(items.map(bar => bar.value))!])
-      .range([innerSize.height, 0]);
-
-    const yAxis = axisLeft(yScale)
-      .ticks(3)
-      .tickSize(innerSize.width)
-      .tickPadding(6);
-
-    const bars = items.map(bar => (
-      <rect
-        key={bar.value}
-        y={yScale(bar.value)}
-        height={innerSize.height - yScale(bar.value)}
-        x={xScale(bar.key)}
-        width={xScale.bandwidth()}
-        opacity={
-          this.state.selectedItem && this.state.selectedItem !== bar ? 0.5 : 1
-        }
-        fill={bar.color}
-      />
-    ));
+    const yScale = scaleLinear().domain([0, max(items.map(bar => bar.value))!]);
 
     return (
-      <>
-        <BarLegend item={this.state.selectedItem} />
-        <svg
-          width={size.width}
-          height={size.height}
-          className="chart"
-          onMouseMove={e => {
-            const bounds = e.currentTarget.getBoundingClientRect();
-            const x = e.clientX - bounds.left - padding.left;
-            const index = Math.max(bisect(breakpoints, x) - 1, 0);
-            this.selectBar(this.props.items[index]);
-          }}
-          onMouseLeave={() => {
-            this.selectBar(undefined);
-          }}
-        >
-          <g
-            transform={`translate(${padding.left}, ${padding.top})`}
-            className="inner"
-          >
-            <g transform={`translate(0, ${innerSize.height})`}>
-              <Axis axis={xAxis} />
-            </g>
+      <Chart
+        size={size}
+        xScale={xScale}
+        yScale={yScale}
+        getItemByPosition={x => {
+          const breakpoints = items.map((bar, index) => xScale(bar.key)!);
+          const index = Math.max(bisect(breakpoints, x) - 1, 0);
+          return this.props.items[index];
+        }}
+        renderValue={this.props.renderValue}
+        renderLabel={this.props.renderLabel}
+        renderChart={({
+          innerSize,
+          selectedItem
+        }: {
+          innerSize: Size;
+          selectedItem?: ChartItem;
+        }) => {
+          const xAxis = axisBottom(xScale)
+            .tickSize(0)
+            .tickPadding(10)
+            .ticks(Math.floor(innerSize.width / 80));
 
-            <g transform={`translate(${innerSize.width}, 0)`}>
-              <Axis axis={yAxis} />
-            </g>
+          const yAxis = axisLeft<number>(yScale)
+            .tickSize(innerSize.width)
+            .tickPadding(6)
+            .ticks(2);
 
-            <g className="bars">{bars}</g>
-          </g>
-        </svg>
-      </>
+          const bars = items.map(bar => (
+            <rect
+              key={bar.value}
+              y={yScale(bar.value)}
+              height={innerSize.height - yScale(bar.value)}
+              x={xScale(bar.key)}
+              width={xScale.bandwidth()}
+              opacity={selectedItem && selectedItem !== bar ? 0.5 : 1}
+              fill={bar.color}
+            />
+          ));
+
+          return (
+            <>
+              <g transform={`translate(0, ${innerSize.height})`}>
+                <Axis axis={xAxis} />
+              </g>
+
+              <g transform={`translate(${innerSize.width}, 0)`}>
+                <Axis axis={yAxis} />
+              </g>
+
+              <g className="bars">{bars}</g>
+            </>
+          );
+        }}
+      />
     );
   }
 }
 
 export default BarChart;
-
-function BarLegend(props: { item?: ChartItem }) {
-  if (!props.item) {
-    return <ChartLegend visible={false} label="&nbsp;" value="&nbsp;" />;
-  }
-  return (
-    <ChartLegend
-      visible={true}
-      color={props.item.color}
-      label={`Rating ${props.item.label}`}
-      value={
-        <>
-          <b>{`${props.item.value}`}</b> Responses
-        </>
-      }
-    />
-  );
-}

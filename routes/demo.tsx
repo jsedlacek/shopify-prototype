@@ -3,7 +3,7 @@ import '@shopify/polaris/styles.css';
 import { isNumber } from 'lodash';
 import moment from 'moment';
 import React from 'react';
-import RatingFrequency from '../charts/rating-frequency';
+import RatingFrequency from '../components/rating-frequency';
 import TimeChart from '../charts/time-chart';
 import WidthMonitor from '../components/width-monitor';
 
@@ -69,7 +69,7 @@ function ResponseTrend() {
           size={{ width: width, height: 150 }}
           renderValue={value => (
             <>
-              <b>{value}</b> Responses
+              <b>{value}</b> response(s)
             </>
           )}
           items={[
@@ -118,7 +118,7 @@ function RatingFrequencyReport() {
 export default function Demo() {
   return (
     <Page
-      title="Demo Dashboard"
+      title="Demo dashboard"
       primaryAction={{ content: 'Settings', url: '/settings' }}
       breadcrumbs={[{ content: 'SatisMeter', url: '/' }]}
     >
