@@ -1,6 +1,5 @@
-import { axisBottom, axisLeft, bisect, max, scaleBand, scaleLinear } from 'd3';
+import { bisect, max, scaleBand, scaleLinear } from 'd3';
 import React from 'react';
-import Axis from './axis';
 import Chart from './chart';
 
 interface Size {
@@ -55,16 +54,6 @@ class BarChart extends React.Component<Props, State> {
           innerSize: Size;
           selectedItem?: ChartItem;
         }) => {
-          const xAxis = axisBottom(xScale)
-            .tickSize(0)
-            .tickPadding(10)
-            .ticks(Math.floor(innerSize.width / 80));
-
-          const yAxis = axisLeft<number>(yScale)
-            .tickSize(innerSize.width)
-            .tickPadding(6)
-            .ticks(2);
-
           const bars = items.map(bar => (
             <rect
               key={bar.value}
@@ -77,19 +66,7 @@ class BarChart extends React.Component<Props, State> {
             />
           ));
 
-          return (
-            <>
-              <g transform={`translate(0, ${innerSize.height})`}>
-                <Axis axis={xAxis} />
-              </g>
-
-              <g transform={`translate(${innerSize.width}, 0)`}>
-                <Axis axis={yAxis} />
-              </g>
-
-              <g className="bars">{bars}</g>
-            </>
-          );
+          return <g className="bars">{bars}</g>;
         }}
       />
     );

@@ -12,7 +12,6 @@ import { minBy } from 'lodash';
 import moment from 'moment';
 import React from 'react';
 import Chart from './chart';
-import Axis from './axis';
 
 interface Size {
   width: number;
@@ -75,6 +74,7 @@ class TimeChart extends React.Component<Props, State> {
           );
           return item;
         }}
+        formatValue={this.props.formatValue}
         renderValue={this.props.renderValue}
         renderChart={({
           innerSize,
@@ -83,20 +83,6 @@ class TimeChart extends React.Component<Props, State> {
           innerSize: Size;
           selectedItem?: ChartItem;
         }) => {
-          const xAxis = axisBottom(xScale)
-            .tickSize(0)
-            .tickPadding(10)
-            .ticks(Math.floor(innerSize.width / 80));
-
-          const yAxis = axisLeft<number>(yScale)
-            .tickSize(innerSize.width)
-            .tickPadding(6)
-            .ticks(2);
-
-          if (this.props.formatValue) {
-            yAxis.tickFormat(this.props.formatValue);
-          }
-
           const lineFn = line<ChartItem>()
             .x(d => xScale(d.date))
             .y(d => yScale(d.value));
@@ -116,14 +102,6 @@ class TimeChart extends React.Component<Props, State> {
 
           return (
             <>
-              <g transform={`translate(0, ${innerSize.height})`}>
-                <Axis axis={xAxis} />
-              </g>
-
-              <g transform={`translate(${innerSize.width}, 0)`}>
-                <Axis axis={yAxis} />
-              </g>
-
               <path className="line" d={lineFn(items) || undefined} />
 
               {this.props.area ? (

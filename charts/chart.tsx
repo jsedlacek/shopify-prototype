@@ -1,6 +1,8 @@
 import React from 'react';
 import './chart.scss';
 import ChartLegend from './chart-legend';
+import { axisBottom, axisLeft } from 'd3-axis';
+import Axis from './axis';
 
 interface Size {
   width: number;
@@ -17,6 +19,7 @@ interface Props<ChartItem extends BaseChartItem> {
   size: Size;
   xScale: any;
   yScale: any;
+  formatValue?: (value: number) => string;
   renderValue?: (value: number) => React.ReactNode;
   renderLabel?: (label: string) => React.ReactNode;
   renderChart: (
@@ -60,6 +63,20 @@ class Chart<ChartItem extends BaseChartItem> extends React.Component<
     this.props.xScale.range([0, innerSize.width]);
     this.props.yScale.range([innerSize.height, 0]);
 
+    const xAxis = axisBottom(this.props.xScale)
+      .tickSize(0)
+      .tickPadding(10)
+      .ticks(Math.floor(innerSize.width / 80));
+
+    const yAxis = axisLeft<number>(this.props.yScale)
+      .tickSize(innerSize.width)
+      .tickPadding(6)
+      .ticks(2);
+
+    if (this.props.formatValue) {
+      yAxis.tickFormat(this.props.formatValue);
+    }
+
     return (
       <>
         <TimeLegend
@@ -85,6 +102,14 @@ class Chart<ChartItem extends BaseChartItem> extends React.Component<
             transform={`translate(${padding.left}, ${padding.top})`}
             className="inner"
           >
+            <g transform={`translate(0, ${innerSize.height})`}>
+              <Axis axis={xAxis} />
+            </g>
+
+            <g transform={`translate(${innerSize.width}, 0)`}>
+              <Axis axis={yAxis} />
+            </g>
+
             {this.props.renderChart({ innerSize, selectedItem })}
           </g>
         </svg>
