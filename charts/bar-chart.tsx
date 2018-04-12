@@ -1,4 +1,5 @@
-import { bisect, max, scaleBand, scaleLinear } from 'd3';
+import { bisect, max } from 'd3-array';
+import { scaleBand, scaleLinear } from 'd3-scale';
 import React from 'react';
 import Chart from './chart';
 

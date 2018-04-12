@@ -1,5 +1,7 @@
-import { area, extent, line, scaleLinear, scaleTime, max } from 'd3';
-import { minBy } from 'lodash';
+import { extent, max } from 'd3-array';
+import { scaleLinear, scaleTime } from 'd3-scale';
+import { area, line } from 'd3-shape';
+import minBy from 'lodash/minBy';
 import moment from 'moment';
 import React from 'react';
 import Chart from './chart';

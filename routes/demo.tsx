@@ -1,6 +1,6 @@
 import { Banner, Card, Layout, Page } from '@shopify/polaris';
 import '@shopify/polaris/styles.css';
-import { isNumber } from 'lodash';
+import isNumber from 'lodash/isNumber';
 import moment from 'moment';
 import React from 'react';
 import RatingFrequency from '../components/rating-frequency';
