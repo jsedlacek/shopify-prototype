@@ -1,6 +1,7 @@
 import { axisBottom, axisLeft, bisect, max, scaleBand, scaleLinear } from 'd3';
 import React from 'react';
 import Axis from './axis';
+import ChartLegend from './chart-legend';
 import './chart.scss';
 
 interface Size {
@@ -21,16 +22,16 @@ interface Props {
 }
 
 interface State {
-  selectedBar?: ChartItem;
+  selectedItem?: ChartItem;
 }
 
 class BarChart extends React.Component<Props, State> {
   state: State = {
-    selectedBar: undefined
+    selectedItem: undefined
   };
 
   selectBar(bar: ChartItem | undefined) {
-    this.setState({ selectedBar: bar });
+    this.setState({ selectedItem: bar });
   }
 
   render() {
@@ -77,44 +78,65 @@ class BarChart extends React.Component<Props, State> {
         x={xScale(bar.key)}
         width={xScale.bandwidth()}
         opacity={
-          this.state.selectedBar && this.state.selectedBar !== bar ? 0.5 : 1
+          this.state.selectedItem && this.state.selectedItem !== bar ? 0.5 : 1
         }
         fill={bar.color}
       />
     ));
 
     return (
-      <svg
-        width={size.width}
-        height={size.height}
-        className="chart"
-        onMouseMove={e => {
-          const bounds = e.currentTarget.getBoundingClientRect();
-          const x = e.clientX - bounds.left - padding.left;
-          const index = Math.max(bisect(breakpoints, x) - 1, 0);
-          this.selectBar(this.props.items[index]);
-        }}
-        onMouseLeave={() => {
-          this.selectBar(undefined);
-        }}
-      >
-        <g
-          transform={`translate(${padding.left}, ${padding.top})`}
-          className="inner"
+      <>
+        <BarLegend item={this.state.selectedItem} />
+        <svg
+          width={size.width}
+          height={size.height}
+          className="chart"
+          onMouseMove={e => {
+            const bounds = e.currentTarget.getBoundingClientRect();
+            const x = e.clientX - bounds.left - padding.left;
+            const index = Math.max(bisect(breakpoints, x) - 1, 0);
+            this.selectBar(this.props.items[index]);
+          }}
+          onMouseLeave={() => {
+            this.selectBar(undefined);
+          }}
         >
-          <g transform={`translate(0, ${innerSize.height})`}>
-            <Axis axis={xAxis} />
-          </g>
+          <g
+            transform={`translate(${padding.left}, ${padding.top})`}
+            className="inner"
+          >
+            <g transform={`translate(0, ${innerSize.height})`}>
+              <Axis axis={xAxis} />
+            </g>
 
-          <g transform={`translate(${innerSize.width}, 0)`}>
-            <Axis axis={yAxis} />
-          </g>
+            <g transform={`translate(${innerSize.width}, 0)`}>
+              <Axis axis={yAxis} />
+            </g>
 
-          <g className="bars">{bars}</g>
-        </g>
-      </svg>
+            <g className="bars">{bars}</g>
+          </g>
+        </svg>
+      </>
     );
   }
 }
 
 export default BarChart;
+
+function BarLegend(props: { item?: ChartItem }) {
+  if (!props.item) {
+    return <ChartLegend visible={false} label="&nbsp;" value="&nbsp;" />;
+  }
+  return (
+    <ChartLegend
+      visible={true}
+      color={props.item.color}
+      label={`Rating ${props.item.label}`}
+      value={
+        <>
+          <b>{`${props.item.value}`}</b> Responses
+        </>
+      }
+    />
+  );
+}

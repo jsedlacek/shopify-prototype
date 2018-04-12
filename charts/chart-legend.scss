@@ -1,0 +1,29 @@
+.ChartLegend {
+  padding: 10px 20px;
+}
+
+.ChartLegend--invisible {
+  visibility: hidden;
+}
+
+.ChartLegend-point {
+  background-color: #737ec7;
+  border-radius: 50%;
+  display: inline-block;
+  height: 8px;
+  margin-bottom: 1px;
+  margin-right: 4px;
+  width: 8px;
+}
+
+.ChartLegend-label {
+  display: inline-block;
+  width: 100px;
+  font-size: 14px;
+  color: #999;
+}
+
+.ChartLegend-value {
+  display: inline-block;
+  font-size: 14px;
+}

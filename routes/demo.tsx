@@ -26,7 +26,12 @@ function NpsTrend() {
           size={{ width: width, height: 150 }}
           area={false}
           domain={[-100, 100]}
-          valueFormat={formatScore}
+          formatValue={formatScore}
+          renderValue={value => (
+            <>
+              <b>{formatScore(value)}</b> NPS
+            </>
+          )}
           items={[
             {
               date: moment()
@@ -34,14 +39,19 @@ function NpsTrend() {
                 .startOf('day')
                 .toDate(),
               value: -10,
-              label: new Date().toDateString()
+              label: moment()
+                .subtract(1, 'day')
+                .startOf('day')
+                .format('ll')
             },
             {
               date: moment()
                 .startOf('day')
                 .toDate(),
               value: 20,
-              label: new Date().toDateString()
+              label: moment()
+                .startOf('day')
+                .format('ll')
             }
           ]}
         />
@@ -57,6 +67,11 @@ function ResponseTrend() {
         <TimeChart
           area={true}
           size={{ width: width, height: 150 }}
+          renderValue={value => (
+            <>
+              <b>{value}</b> Responses
+            </>
+          )}
           items={[
             {
               date: moment()
@@ -64,14 +79,19 @@ function ResponseTrend() {
                 .startOf('day')
                 .toDate(),
               value: 10,
-              label: new Date().toDateString()
+              label: moment()
+                .subtract(1, 'day')
+                .startOf('day')
+                .format('ll')
             },
             {
               date: moment()
                 .startOf('day')
                 .toDate(),
               value: 20,
-              label: new Date().toDateString()
+              label: moment()
+                .startOf('day')
+                .format('ll')
             }
           ]}
         />

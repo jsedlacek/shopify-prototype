@@ -1,17 +1,18 @@
-import React from 'react';
-import './chart';
-import Axis from './axis';
 import {
-  extent,
-  scaleTime,
+  area,
   axisBottom,
-  scaleLinear,
   axisLeft,
+  extent,
   line,
-  area
+  scaleLinear,
+  scaleTime
 } from 'd3';
 import { minBy } from 'lodash';
 import moment from 'moment';
+import React from 'react';
+import Axis from './axis';
+import './chart';
+import ChartLegend from './chart-legend';
 
 interface Size {
   width: number;
@@ -29,7 +30,8 @@ interface Props {
   items: ChartItem[];
   area: boolean;
   domain?: [number, number];
-  valueFormat?: (value: number) => string;
+  formatValue?: (value: number) => string;
+  renderValue?: (value: number) => React.ReactNode;
 }
 
 interface State {
@@ -88,8 +90,8 @@ class TimeChart extends React.Component<Props, State> {
       .tickPadding(6)
       .ticks(2);
 
-    if (this.props.valueFormat) {
-      yAxis.tickFormat(this.props.valueFormat);
+    if (this.props.formatValue) {
+      yAxis.tickFormat(this.props.formatValue);
     }
 
     const lineFn = line<ChartItem>()
@@ -110,50 +112,73 @@ class TimeChart extends React.Component<Props, State> {
     }
 
     return (
-      <svg
-        width={size.width}
-        height={size.height}
-        className="chart"
-        onMouseMove={e => {
-          const bounds = e.currentTarget.getBoundingClientRect();
-          const x = e.clientX - bounds.left - padding.left;
-          const mouseDate = xScale.invert(x);
-          const dates = this.props.items.map(item => item.date);
-          const closestDate = minBy(dates, date =>
-            Math.abs(moment(mouseDate).diff(date))
-          );
-          const item = this.props.items.find(item =>
-            moment(item.date).isSame(closestDate)
-          );
-          this.selectItem(item);
-        }}
-        onMouseLeave={() => {
-          this.selectItem(undefined);
-        }}
-      >
-        <g
-          transform={`translate(${padding.left}, ${padding.top})`}
-          className="inner"
+      <>
+        <TimeLegend
+          item={this.state.selectedItem}
+          renderValue={this.props.renderValue}
+        />
+        <svg
+          width={size.width}
+          height={size.height}
+          className="chart"
+          onMouseMove={e => {
+            const bounds = e.currentTarget.getBoundingClientRect();
+            const x = e.clientX - bounds.left - padding.left;
+            const mouseDate = xScale.invert(x);
+            const dates = this.props.items.map(item => item.date);
+            const closestDate = minBy(dates, date =>
+              Math.abs(moment(mouseDate).diff(date))
+            );
+            const item = this.props.items.find(item =>
+              moment(item.date).isSame(closestDate)
+            );
+            this.selectItem(item);
+          }}
+          onMouseLeave={() => {
+            this.selectItem(undefined);
+          }}
         >
-          <g transform={`translate(0, ${innerSize.height})`}>
-            <Axis axis={xAxis} />
+          <g
+            transform={`translate(${padding.left}, ${padding.top})`}
+            className="inner"
+          >
+            <g transform={`translate(0, ${innerSize.height})`}>
+              <Axis axis={xAxis} />
+            </g>
+
+            <g transform={`translate(${innerSize.width}, 0)`}>
+              <Axis axis={yAxis} />
+            </g>
+
+            <path className="line" d={lineFn(items) || undefined} />
+
+            {this.props.area ? (
+              <path className="area" d={areaFn(items) || undefined} />
+            ) : null}
+
+            {circle}
           </g>
-
-          <g transform={`translate(${innerSize.width}, 0)`}>
-            <Axis axis={yAxis} />
-          </g>
-
-          <path className="line" d={lineFn(items) || undefined} />
-
-          {this.props.area ? (
-            <path className="area" d={areaFn(items) || undefined} />
-          ) : null}
-
-          {circle}
-        </g>
-      </svg>
+        </svg>
+      </>
     );
   }
 }
 
 export default TimeChart;
+
+function TimeLegend(props: {
+  item?: ChartItem;
+  renderValue?: (item: number) => React.ReactNode;
+}) {
+  if (!props.item) {
+    return <ChartLegend visible={false} label="&nbsp;" value="&nbsp;" />;
+  }
+  const renderValue = props.renderValue || (value => <b>{value}</b>);
+  return (
+    <ChartLegend
+      visible={true}
+      label={`${props.item.label}`}
+      value={renderValue(props.item.value)}
+    />
+  );
+}
