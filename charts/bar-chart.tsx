@@ -15,7 +15,7 @@ interface ChartItem {
 }
 
 interface Props {
-  size: Size;
+  height?: number;
   items: ChartItem[];
   formatValue?: (value: number) => string;
   renderValue?: (value: number) => React.ReactNode;
@@ -26,7 +26,7 @@ interface State {}
 
 class BarChart extends React.Component<Props, State> {
   render() {
-    const { size, items } = this.props;
+    const { height, items } = this.props;
 
     const xScale = scaleBand()
       .padding(0.3)
@@ -37,7 +37,7 @@ class BarChart extends React.Component<Props, State> {
 
     return (
       <Chart
-        size={size}
+        height={height}
         xScale={xScale}
         yScale={yScale}
         getItemByPosition={x => {

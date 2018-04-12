@@ -1,13 +1,4 @@
-import {
-  area,
-  axisBottom,
-  axisLeft,
-  extent,
-  line,
-  scaleLinear,
-  scaleTime,
-  max
-} from 'd3';
+import { area, extent, line, scaleLinear, scaleTime, max } from 'd3';
 import { minBy } from 'lodash';
 import moment from 'moment';
 import React from 'react';
@@ -25,7 +16,7 @@ interface ChartItem {
 }
 
 interface Props {
-  size: Size;
+  height?: number;
   items: ChartItem[];
   area: boolean;
   domain?: [number, number];
@@ -37,7 +28,7 @@ interface State {}
 
 class TimeChart extends React.Component<Props, State> {
   render() {
-    const { size, items } = this.props;
+    const { items } = this.props;
 
     const dates = items.map(item => item.date);
     const [minDate, maxDate] = extent(dates);
@@ -60,7 +51,6 @@ class TimeChart extends React.Component<Props, State> {
 
     return (
       <Chart
-        size={size}
         xScale={xScale}
         yScale={yScale}
         getItemByPosition={x => {

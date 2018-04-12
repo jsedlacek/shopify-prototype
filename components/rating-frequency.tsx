@@ -1,11 +1,6 @@
 import React from 'react';
 import BarChart from '../charts/bar-chart';
 
-interface Size {
-  width: number;
-  height: number;
-}
-
 function group(rating: number) {
   if (rating <= 6) {
     return 'detractor';
@@ -23,10 +18,8 @@ const colors = {
 };
 
 export default function RatingFrequency({
-  size,
   ratingCounts
 }: {
-  size: Size;
   ratingCounts: number[];
 }) {
   const model = ratingCounts.map((count, rating) => ({
@@ -38,7 +31,6 @@ export default function RatingFrequency({
 
   return (
     <BarChart
-      size={size}
       items={model}
       renderValue={value => (
         <>

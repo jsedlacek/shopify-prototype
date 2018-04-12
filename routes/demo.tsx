@@ -5,7 +5,6 @@ import moment from 'moment';
 import React from 'react';
 import RatingFrequency from '../components/rating-frequency';
 import TimeChart from '../charts/time-chart';
-import WidthMonitor from '../components/width-monitor';
 
 function formatScore(score: number) {
   if (!isNumber(score)) {
@@ -20,82 +19,72 @@ function formatScore(score: number) {
 
 function NpsTrend() {
   return (
-    <WidthMonitor
-      render={width => (
-        <TimeChart
-          size={{ width: width, height: 150 }}
-          area={false}
-          domain={[-100, 100]}
-          formatValue={formatScore}
-          renderValue={value => (
-            <>
-              <b>{formatScore(value)}</b> NPS
-            </>
-          )}
-          items={[
-            {
-              date: moment()
-                .subtract(1, 'day')
-                .startOf('day')
-                .toDate(),
-              value: -10,
-              label: moment()
-                .subtract(1, 'day')
-                .startOf('day')
-                .format('ll')
-            },
-            {
-              date: moment()
-                .startOf('day')
-                .toDate(),
-              value: 20,
-              label: moment()
-                .startOf('day')
-                .format('ll')
-            }
-          ]}
-        />
+    <TimeChart
+      area={false}
+      domain={[-100, 100]}
+      formatValue={formatScore}
+      renderValue={value => (
+        <>
+          <b>{formatScore(value)}</b> NPS
+        </>
       )}
+      items={[
+        {
+          date: moment()
+            .subtract(1, 'day')
+            .startOf('day')
+            .toDate(),
+          value: -10,
+          label: moment()
+            .subtract(1, 'day')
+            .startOf('day')
+            .format('ll')
+        },
+        {
+          date: moment()
+            .startOf('day')
+            .toDate(),
+          value: 20,
+          label: moment()
+            .startOf('day')
+            .format('ll')
+        }
+      ]}
     />
   );
 }
 
 function ResponseTrend() {
   return (
-    <WidthMonitor
-      render={width => (
-        <TimeChart
-          area={true}
-          size={{ width: width, height: 150 }}
-          renderValue={value => (
-            <>
-              <b>{value}</b> response(s)
-            </>
-          )}
-          items={[
-            {
-              date: moment()
-                .subtract(1, 'day')
-                .startOf('day')
-                .toDate(),
-              value: 10,
-              label: moment()
-                .subtract(1, 'day')
-                .startOf('day')
-                .format('ll')
-            },
-            {
-              date: moment()
-                .startOf('day')
-                .toDate(),
-              value: 20,
-              label: moment()
-                .startOf('day')
-                .format('ll')
-            }
-          ]}
-        />
+    <TimeChart
+      area={true}
+      renderValue={value => (
+        <>
+          <b>{value}</b> response(s)
+        </>
       )}
+      items={[
+        {
+          date: moment()
+            .subtract(1, 'day')
+            .startOf('day')
+            .toDate(),
+          value: 10,
+          label: moment()
+            .subtract(1, 'day')
+            .startOf('day')
+            .format('ll')
+        },
+        {
+          date: moment()
+            .startOf('day')
+            .toDate(),
+          value: 20,
+          label: moment()
+            .startOf('day')
+            .format('ll')
+        }
+      ]}
     />
   );
 }
@@ -103,16 +92,7 @@ function ResponseTrend() {
 function RatingFrequencyReport() {
   const ratingCounts = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
 
-  return (
-    <WidthMonitor
-      render={width => (
-        <RatingFrequency
-          size={{ width: width, height: 150 }}
-          ratingCounts={ratingCounts}
-        />
-      )}
-    />
-  );
+  return <RatingFrequency ratingCounts={ratingCounts} />;
 }
 
 export default function Demo() {
